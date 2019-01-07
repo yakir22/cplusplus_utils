@@ -9,8 +9,7 @@
 typedef std::packaged_task<boost::any()> UiTask;
 
 std::mutex tasks_mutex;
-std::atomic<bool> gui_running;
-std::deque<UiTask> tasks_strings;
+std::deque<UiTask> tasks;
 
 boost::any proxy(const std::string &p)
 {
@@ -23,7 +22,7 @@ auto RunOnUiThread(UiTask &task)
 	std::future<boost::any> result = task.get_future();
 	{
 		std::lock_guard<std::mutex> lock(tasks_mutex);
-		tasks_strings.push_back(std::move(task));
+		tasks.push_back(std::move(task));
 	}
 	return result.get();
 
@@ -52,10 +51,10 @@ bool RunOnUiThreadTest()
 	while (total)
 	{
 		std::unique_lock<std::mutex> lock(tasks_mutex);
-		while (!tasks_strings.empty())
+		while (!tasks.empty())
 		{
-			auto task(std::move(tasks_strings.front()));
-			tasks_strings.pop_front();
+			auto task(std::move(tasks.front()));
+			tasks.pop_front();
 			lock.unlock();
 			task();
 			lock.lock();
