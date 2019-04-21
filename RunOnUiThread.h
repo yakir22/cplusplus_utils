@@ -16,7 +16,7 @@ boost::any proxy(const std::string &p)
 	return boost::any(p + "b");
 }
 
-
+// TODO :: this will stack if called from the ui thread
 auto RunOnUiThread(UiTask &task)
 {
 	std::future<boost::any> result = task.get_future();
