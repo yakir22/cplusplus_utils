@@ -71,9 +71,9 @@ public:
 
 struct TestS : public AutoSerializationClass
 {
-	dclmember(TestS, int, anotherOne);
-	dclmember(TestS, float, score);
-	dclmember(TestS, std::string, myName);
+	dclmember(TestS, int, anotherOne,0);
+	dclmember(TestS, float, score,0);
+	dclmember(TestS, std::string, myName,"yakir");
 };
 
 
